@@ -33,6 +33,28 @@ Os scripts usam a variável de canal indicada abaixo. Ajuste-a antes de executar
 
 Nos experimentos integrados, o **downlink** pode usar `software` ou `adalm2000`, enquanto o **uplink** pode usar `software` ou `adalm-pluto`.
 
+## Parametrização
+
+Os parâmetros ficam no início de cada script de experimento. A sequência recomendada é configurar primeiro o canal (`software`), validar a forma de onda e só então alterar os parâmetros de hardware.
+
+| Grupo | Parâmetros principais | Onde configurar | Finalidade |
+| --- | --- | --- | --- |
+| Forma de onda NR | `pSCS`, `pSizeGrid`, `pLayers`, `pCyclicPrefix`, `pNCellID` | scripts half-duplex e estruturas `gNBConfig`/`UEConfig` | Espaçamento entre subportadoras (kHz), quantidade de RBs, camadas, prefixo cíclico e identidade da célula. |
+| Modulação e codificação | `pDigitalModulation`, `pModulationLevel`, `pCodeRate` ou `DCIModulation` | scripts half-duplex; `main_experimental.m` | Define QPSK/16QAM/64QAM e a taxa de código. Nos experimentos integrados, `DCIModulation` é convertido pela função `getMCSLookupTable`. |
+| Canal simulado | `pChannel`, `pSNRdB`, `pFrequencyOffset`, `pPhaseOffset` | `main_downlink.m` e `main_uplink.m` | Seleciona o elemento de canal e controla ruído AWGN, erro de frequência e erro de fase. |
+| RF / ADALM-PLUTO | `pGain`, `pCenterFrequency`, `pRadioIDTx`, `pRadioIDRx` | scripts half-duplex e full-duplex | Define ganho de transmissão, frequência RF e os identificadores USB/IP de TX e RX. |
+| VLC / ADALM2000 | `pVLCCenterFrequency`, `pDACSampleRate`, `pADCSampleRate` | scripts half-duplex e full-duplex | Define a portadora elétrica do enlace VLC e as taxas de DAC/ADC. |
+| Execução integrada | `pCHDownlink`, `pCHUplink`, `pMaxIt`, `pMaxRetry` | `experiments/full-duplex/main_experimental.m` | Escolhe o elemento de canal por sentido e controla o número de iterações e retransmissões. |
+| Varredura VLC | `DCItypes`, `Idc`, `distance`, `downlinkCH`, `uplinkCH` | `experiments/VLCTestBed/main_start.m` | Define MCSs testados, corrente de polarização, distância e elementos de canal da bancada. |
+
+### Valores de partida
+
+Para validar a cadeia sem hardware, use `pChannel = 'software'` nos scripts half-duplex. Nos experimentos full-duplex e VLC Test Bed, use `pCHDownlink = 'software'` e `pCHUplink = 'software'`. Um conjunto frequente de parâmetros no código é SCS de 15 kHz, grade de 25 RBs, uma camada, prefixo normal e `pNCellID = 102`.
+
+### Migração para hardware
+
+Para RF, altere o canal para `adalm-pluto`, ajuste os IDs/IPs para os dispositivos conectados, confirme `pCenterFrequency` e comece com ganho baixo (`pGain`). Para VLC, selecione `adalm2000`, confira a ligação entre DAC, driver óptico e receptor/ADC, então ajuste a frequência VLC e as taxas de amostragem. O script `initM2KSDR.m` realiza a abertura e calibração dos ADALM2000; `initPlutoSDR.m` configura transmissão e recepção com os filtros do PLUTO.
+
 ## Principais experimentos
 
 ### Half-duplex
@@ -74,7 +96,7 @@ Os resultados originalmente produzidos em `experiments/VLCTestBed/Results2/` sã
 
 ## Publicação e dados ignorados
 
-O arquivo `.gitignore` na raiz exclui `UNUSED Code/`, o arquivo ZIP, a imagem de condição de teste e `experiments/VLCTestBed/Results2/`. Ele também exclui figuras MATLAB (`.fig`) e a forma de onda gerada `filters/waveform_pb.mat`, que são artefatos binários de grande porte; o código-fonte e as configurações de filtro necessárias permanecem versionados.
+O arquivo `.gitignore` na raiz exclui `UNUSED Code/`, o arquivo ZIP, a imagem de condição de teste e `experiments/VLCTestBed/Results2/`. Além disso, arquivos de resultado, formas de onda, configurações binárias, figuras, imagens, PDFs, textos auxiliares e autosaves do MATLAB não são versionados. O repositório contém somente os scripts MATLAB, este README e a configuração de Git.
 
 ## Observações de segurança operacional
 

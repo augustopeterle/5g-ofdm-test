@@ -4,6 +4,11 @@
 /Melhor Condicao 2-75MHZ sem distorcao.PNG
 /src/experiments/VLCTestBed/Results2/
 
-# Artefatos binários gerados por experimentos (não são código-fonte)
+# Artefatos e configurações binárias gerados por experimentos (não são código-fonte)
 *.fig
-/src/filters/waveform_pb.mat
+*.mat
+*.bmp
+*.jpg
+*.pdf
+*.asv
+*.txt
