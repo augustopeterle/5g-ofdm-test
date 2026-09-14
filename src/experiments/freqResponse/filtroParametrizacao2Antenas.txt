@@ -1,0 +1,11 @@
+Filter = 2
+Phase Equalization = 0
+Use AD936x FIR = 1
+Fpass = 2
+Fstop = 2.500000e+00
+Apass = 5.000000e-01
+Astop = 80
+Param = 0.000000
+PLL rate  = 9.830400e+02
+Converter = 2.457600e+02
+Data rate = 6.144000e+01

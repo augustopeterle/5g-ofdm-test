@@ -1,0 +1,41 @@
+clear all;
+close all;
+clc;
+
+% Create SSB Grid
+ssblock = zeros([240 4])
+
+% Define Cell ID
+ncellid = 102;
+
+% PSS
+pssSymbols = nrPSS(ncellid);
+pssIndices = nrPSSIndices;
+ssblock(pssIndices) = 1 * pssSymbols;
+
+%SSS
+sssSymbols = nrSSS(ncellid);
+sssIndices = nrSSSIndices;
+ssblock(sssIndices) = 2 * sssSymbols;
+
+% PBCH
+cw = randi([0 1],864,1);
+v = 0;
+pbchSymbols = nrPBCH(cw,ncellid,v);
+pbchIndices = nrPBCHIndices(ncellid);
+ssblock(pbchIndices) = 3 * pbchSymbols;
+
+% PBCH DMRS
+ibar_SSB = 0;
+dmrsSymbols = nrPBCHDMRS(ncellid,ibar_SSB);
+dmrsIndices = nrPBCHDMRSIndices(ncellid);
+ssblock(dmrsIndices) = 4 * dmrsSymbols;
+
+% SS BURST
+nSubframes = 5;
+symbolsPerSlot = 14;
+
+
+mu = 1;
+nSymbols = symbolsPerSlot * 2^mu * nSubframes;
+ssburst = zeros([240 nSymbols]);
