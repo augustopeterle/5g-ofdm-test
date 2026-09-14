@@ -6,6 +6,19 @@ Automatiza experimentos do enlace 5G NR sobre VLC: downlink pelo ADALM2000 e upl
 - `main_experimental.m`: executa uma combinação de parâmetros.
 - `ofdm3D.m`: visualização OFDM.
 
+## Parametrização
+
+Todos os parâmetros de varredura são definidos no início de `main_start.m`; os parâmetros do enlace são consumidos por `main_experimental.m`.
+
+| Grupo | Parâmetros | Descrição |
+| --- | --- | --- |
+| MCS | `DCItypes` | Vetor de índices MCS a serem testados. Cada índice é convertido em modulação e taxa de código por `getMCSLookupTable`. |
+| Bancada óptica | `Idc`, `distance` | Corrente de polarização do emissor óptico e distância física do enlace; ambos identificam a condição do ensaio. |
+| Canal | `downlinkCH`, `uplinkCH` | Seleciona `software` ou `adalm2000` no downlink e `software` ou `adalm-pluto` no uplink. |
+| Critério de qualidade | `evmDLmin`, `evmDLmax` | Limites de EVM usados para avaliar o downlink na condição selecionada. |
+| NR | `pSCS`, `pSizeGrid`, `pBW`, `pNCellID`, `pLayers` | Definidos em `main_experimental.m`; configuram a numerologia e a grade do gNB/UE. |
+| Hardware | `pPlutoArg`, `pM2K`, IPs dos dispositivos | Define ganho/frequência RF, portadora VLC, taxas ADC/DAC e endereços da bancada. |
+
 ## Como rodar
 
 Em `main_start.m`, configure `DCItypes`, `Idc`, `distance`, `downlinkCH` e `uplinkCH`; depois execute `main_start.m`.
